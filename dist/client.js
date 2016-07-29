@@ -1,14 +1,12 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _unirest = require('unirest');
 
@@ -66,7 +64,11 @@ var _job = require('./job');
 
 var _job2 = _interopRequireDefault(_job);
 
-var Client = (function () {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Client = function () {
   function Client() {
     _classCallCheck(this, Client);
 
@@ -75,28 +77,33 @@ var Client = (function () {
     }
 
     if (args.length === 2) {
-      this.appId = args[0];
-      this.appApiKey = args[1];
+      this.usernamePart = args[0];
+      this.passwordPart = args[1];
     } else if (args.length === 1) {
-      this.appId = args[0].appId;
-      this.appApiKey = args[0].appApiKey;
+      if (args[0].token) {
+        this.usernamePart = args[0].token;
+        this.passwordPart = '';
+      } else {
+        this.usernamePart = args[0].appId;
+        this.passwordPart = args[0].appApiKey;
+      }
     }
-    if (!this.appId || !this.appApiKey) {
+    if (!this.usernamePart || this.passwordPart === undefined) {
       throw new Error('Could not construct a client with those parameters');
     }
-    this.users = new _user2['default'](this);
-    this.events = new _event2['default'](this);
-    this.companies = new _company2['default'](this);
-    this.contacts = new _contact2['default'](this);
-    this.leads = new _contact2['default'](this);
-    this.counts = new _counts2['default'](this);
-    this.admins = new _admin2['default'](this);
-    this.tags = new _tag2['default'](this);
-    this.segments = new _segment2['default'](this);
-    this.messages = new _message2['default'](this);
-    this.conversations = new _conversation2['default'](this);
-    this.notes = new _note2['default'](this);
-    this.jobs = new _job2['default'](this);
+    this.users = new _user2.default(this);
+    this.events = new _event2.default(this);
+    this.companies = new _company2.default(this);
+    this.contacts = new _contact2.default(this);
+    this.leads = new _contact2.default(this);
+    this.counts = new _counts2.default(this);
+    this.admins = new _admin2.default(this);
+    this.tags = new _tag2.default(this);
+    this.segments = new _segment2.default(this);
+    this.messages = new _message2.default(this);
+    this.conversations = new _conversation2.default(this);
+    this.notes = new _note2.default(this);
+    this.jobs = new _job2.default(this);
     this.promises = false;
   }
 
@@ -111,11 +118,11 @@ var Client = (function () {
     value: function promiseProxy(f, req) {
       var _this = this;
 
-      if (this.promises) {
-        var _ret = (function () {
+      if (this.promises || !f) {
+        var _ret = function () {
           var callbackHandler = _this.callback;
           return {
-            v: new _bluebird2['default'](function (resolve, reject) {
+            v: new _bluebird2.default(function (resolve, reject) {
               var resolver = function resolver(err, data) {
                 if (err) {
                   reject(new Error(JSON.stringify(err)));
@@ -128,9 +135,9 @@ var Client = (function () {
               });
             })
           };
-        })();
+        }();
 
-        if (typeof _ret === 'object') return _ret.v;
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
       } else {
         req.end(function (r) {
           return _this.callback(f, r);
@@ -140,34 +147,34 @@ var Client = (function () {
   }, {
     key: 'ping',
     value: function ping(f) {
-      _unirest2['default'].get('https://api.intercom.io/admins').auth(this.appId, this.appApiKey).type('json').header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0').end(function (r) {
+      _unirest2.default.get('https://api.intercom.io/admins').auth(this.usernamePart, this.passwordPart).type('json').header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0').end(function (r) {
         return f(r.status);
       });
     }
   }, {
     key: 'put',
     value: function put(endpoint, data, f) {
-      return this.promiseProxy(f, _unirest2['default'].put('https://api.intercom.io' + endpoint).auth(this.appId, this.appApiKey).type('json').send(data).header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
+      return this.promiseProxy(f, _unirest2.default.put('https://api.intercom.io' + endpoint).auth(this.usernamePart, this.passwordPart).type('json').send(data).header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
     }
   }, {
     key: 'post',
     value: function post(endpoint, data, f) {
-      return this.promiseProxy(f, _unirest2['default'].post('https://api.intercom.io' + endpoint).auth(this.appId, this.appApiKey).type('json').send(data).header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
+      return this.promiseProxy(f, _unirest2.default.post('https://api.intercom.io' + endpoint).auth(this.usernamePart, this.passwordPart).type('json').send(data).header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
     }
   }, {
     key: 'get',
     value: function get(endpoint, data, f) {
-      return this.promiseProxy(f, _unirest2['default'].get('https://api.intercom.io' + endpoint).auth(this.appId, this.appApiKey).type('json').query(data).header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
+      return this.promiseProxy(f, _unirest2.default.get('https://api.intercom.io' + endpoint).auth(this.usernamePart, this.passwordPart).type('json').query(data).header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
     }
   }, {
     key: 'nextPage',
     value: function nextPage(paginationObject, f) {
-      return this.promiseProxy(f, _unirest2['default'].get(paginationObject.next).auth(this.appId, this.appApiKey).type('json').header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
+      return this.promiseProxy(f, _unirest2.default.get(paginationObject.next).auth(this.usernamePart, this.passwordPart).type('json').header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
     }
   }, {
     key: 'delete',
     value: function _delete(endpoint, data, f) {
-      return this.promiseProxy(f, _unirest2['default']['delete']('https://api.intercom.io' + endpoint).auth(this.appId, this.appApiKey).type('json').query(data).header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
+      return this.promiseProxy(f, _unirest2.default.delete('https://api.intercom.io' + endpoint).auth(this.usernamePart, this.passwordPart).type('json').query(data).header('Accept', 'application/json').header('User-Agent', 'intercom-node-client/2.0.0'));
     }
   }, {
     key: 'callback',
@@ -189,7 +196,6 @@ var Client = (function () {
   }]);
 
   return Client;
-})();
+}();
 
-exports['default'] = Client;
-module.exports = exports['default'];
+exports.default = Client;

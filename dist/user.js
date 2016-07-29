@@ -1,20 +1,20 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _bulk = require('./bulk');
 
 var _bulk2 = _interopRequireDefault(_bulk);
 
-var User = (function () {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var User = function () {
   function User(client) {
     _classCallCheck(this, User);
 
@@ -51,27 +51,26 @@ var User = (function () {
     key: 'delete',
     value: function _delete(params, f) {
       if (params.id) {
-        return this.client['delete']('/users/' + params.id, {}, f);
+        return this.client.delete('/users/' + params.id, {}, f);
       } else if (params.user_id) {
-        return this.client['delete']('/users', { user_id: params.user_id }, f);
+        return this.client.delete('/users', { user_id: params.user_id }, f);
       } else if (params.email) {
-        return this.client['delete']('/users', { email: params.email }, f);
+        return this.client.delete('/users', { email: params.email }, f);
       }
     }
   }, {
     key: 'bulk',
     value: function bulk(params, f) {
-      return new _bulk2['default'](this.client, 'user').bulk(params, f);
+      return new _bulk2.default(this.client, 'user').bulk(params, f);
     }
   }, {
     key: 'bulkJob',
     value: function bulkJob(params, jobId, f) {
-      return new _bulk2['default'](this.client, 'user').bulkJob(params, jobId, f);
+      return new _bulk2.default(this.client, 'user').bulkJob(params, jobId, f);
     }
   }]);
 
   return User;
-})();
+}();
 
-exports['default'] = User;
-module.exports = exports['default'];
+exports.default = User;

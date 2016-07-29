@@ -1,32 +1,32 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.SecureMode = exports.User = exports.Client = undefined;
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var _crypto = require('crypto');
-
-var _crypto2 = _interopRequireDefault(_crypto);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _client = require('./client');
 
 var _client2 = _interopRequireDefault(_client);
 
-exports.Client = _client2['default'];
-
 var _user = require('./user');
 
 var _user2 = _interopRequireDefault(_user);
 
-exports.User = _user2['default'];
+var _crypto = require('crypto');
 
-var SecureMode = (function () {
+var _crypto2 = _interopRequireDefault(_crypto);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+exports.Client = _client2.default;
+exports.User = _user2.default;
+
+var SecureMode = exports.SecureMode = function () {
   function SecureMode() {
     _classCallCheck(this, SecureMode);
   }
@@ -42,11 +42,9 @@ var SecureMode = (function () {
       if (!identifier) {
         throw new Error('identifier must be provided');
       }
-      return _crypto2['default'].createHmac('sha256', secretKey).update(identifier).digest('hex');
+      return _crypto2.default.createHmac('sha256', secretKey).update(identifier).digest('hex');
     }
   }]);
 
   return SecureMode;
-})();
-
-exports.SecureMode = SecureMode;
+}();
